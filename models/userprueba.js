@@ -13,6 +13,9 @@ const UserPruebaSchema = mongoose.Schema({
     },
     email: {
         type: String
+    },
+    editable: {
+        type : Boolean
     }
 })
 
