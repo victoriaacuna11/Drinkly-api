@@ -113,10 +113,6 @@ router.get('/', async (req, res) => {
             res.json(user);
         }
     })
-      // return res.status(200).json({
-      //   success: true,
-      //   data: user
-      // });
   
     } catch (err) {
       if (err.name === 'ValidationError') {
@@ -134,6 +130,37 @@ router.get('/', async (req, res) => {
       }
     }
   
+  });
+
+
+  router.put('/update/:id', async (req, res) => {
+    try {
+  
+      const {
+        firstName,
+        lastName,
+        email,
+        editable,
+      } = req.body
+  
+      const newUser = await User.findOneAndUpdate({ _id: req.params.id }, {
+        firstName,
+        lastName,
+        email,
+        editable
+      }, { returnOriginal: false, useFindAndModify: false });
+  
+      return res.status(200).json({
+        success: true,
+        data: newUser
+      });
+  
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
   });
 
   module.exports = router;
