@@ -16,6 +16,7 @@ connectDB();
 
 //Import Routes
 const userpruebaRoute = require('./routes/userprueba');
+
 const adRoute = require('./routes/advertisement.route');
 const barRoute = require('./routes/bar.route');
 const drinkRoute = require('./routes/drink.route');
@@ -33,14 +34,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-// Uploads user avatars
-// const storage = multer.diskStorage({
-//   destination: path.join(__dirname, 'public/uploads'),
-//   filename: (req, file, cb) => {
-//     cb(null, new Date().getTime() + path.extname(file.originalname))
-//   }
-// });
-// app.use(multer({ storage }).single('image'));
+// Uploads image
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, 'public/uploads'),
+  filename: (req, file, cb) => {
+    cb(null, new Date().getTime() + path.extname(file.originalname))
+  }
+});
+app.use(multer({ storage }).single('image'));
 
 // Shows every request (console)
 if (process.env.NODE_ENV === 'development') {
@@ -52,7 +53,7 @@ app.use('/api/usersprueba', userpruebaRoute);
 app.use('/api/adver', adRoute);
 app.use('/api/bar', barRoute);
 app.use('/api/drink', drinkRoute);
-app.use('/api/ingred', ingredientRoute);
+app.use('/api/ingredient', ingredientRoute);
 app.use('/api/zone', zoneRoute);
 app.use('/api/user', userRoute);
 
