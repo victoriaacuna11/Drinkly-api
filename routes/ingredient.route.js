@@ -41,6 +41,35 @@ router.get('/', async (req, res) => {
   
   });
 
+  //GET INGREDIENT
+
+router.get('/:id', async (req, res) => {
+  try {
+    const ingredient = await Ingredient.findById(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      data: ingredient
+    });
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
+  }
+
+});
+
 
   // ADD  INGREDIENT
 router.post('/add', async (req, res) => {
@@ -84,47 +113,88 @@ router.post('/add', async (req, res) => {
 
 });
 
-router.post('/uploadImage', async (req, res) => {
-  console.log(req.body.name);
-  console.log(req.body.category);
-  console.log(req.body.available);
-  console.log(req.file);
+// INHABILITATE/HABILITATE INGREDIENT
+router.put('/update/:id', async (req, res) => {
+  try {
+    console.log(req.body);
+    Ingredient.updateOne({_id: req.params.id}, (err, ingredient) => {
+      if(err){
+          res.json(err);
+      }
+      else {
+          res.json(ingredient);
+      }
+  })
 
-  const secure_url  = await cloudinary.v2.uploader.upload(req.file.path);
-  let ingredient = {
-      name : req.body.name,
-      category : req.body.category,
-      available : req.body.available,
-      photo : secure_url
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
   }
-  console.log(ingredient.photo);
-  // if(req.file){
-  //   console.log(req.file);
-  // }
-  return res.json({file: req.file});
-})
 
+});
 
-// router.post('/avatar', isLoggedIn, async (req, res) => {
-//   try {
+// DELETE INGREDIENT
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    
+    Ingredient.deleteOne({_id: req.params.id}, (err, ingredient) => {
+      if(err){
+          res.json(err);
+      }
+      else {
+          res.json(ingredient);
+      }
+  })
 
-//     const { secure_url } = await cloudinary.v2.uploader.upload(req.file.path);
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
 
-//     const user = await User.findByIdAndUpdate(req.user, { avatar: secure_url }, { new: true, useFindAndModify: false });
-//     await filesystem.unlink(req.file.path);
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
+  }
 
-//     return res.status(200).json({
-//       success: false,
-//       data: user
-//     });
+});
 
-//   } catch (err) {
-//     return res.status(500).json({
-//       success: false,
-//       error: 'Server Error ' + err
-//     });
+// router.post('/uploadImage', async (req, res) => {
+//   console.log(req.body.name);
+//   console.log(req.body.category);
+//   console.log(req.body.available);
+//   console.log(req.file);
+
+//   const secure_url  = await cloudinary.v2.uploader.upload(req.file.path);
+//   let ingredient = {
+//       name : req.body.name,
+//       category : req.body.category,
+//       available : req.body.available,
+//       photo : secure_url
 //   }
-// });
+//   console.log(ingredient.photo);
+//   // if(req.file){
+//   //   console.log(req.file);
+//   // }
+//   return res.json({file: req.file});
+// })
+
 
 
 module.exports = router;
