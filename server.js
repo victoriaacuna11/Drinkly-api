@@ -15,8 +15,13 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 //Import Routes
-
 const userpruebaRoute = require('./routes/userprueba');
+const adRoute = require('./routes/advertisement.route');
+const barRoute = require('./routes/bar.route');
+const drinkRoute = require('./routes/drink.route');
+const ingredientRoute = require('./routes/ingredient.route');
+const zoneRoute = require('./routes/zone.route');
+const userRoute = require('./routes/user.route');
 
 
 // const reviewsRoute = require('./routes/reviews');
@@ -44,6 +49,15 @@ if (process.env.NODE_ENV === 'development') {
 
 //Routes
 app.use('/api/usersprueba', userpruebaRoute);
+app.use('/api/adver', adRoute);
+app.use('/api/bar', barRoute);
+app.use('/api/drink', drinkRoute);
+app.use('/api/ingred', ingredientRoute);
+app.use('/api/zone', zoneRoute);
+app.use('/api/user', userRoute);
+
+
+
 // app.use('/api/auth', authRoute);
 // app.use('/api/users', userRoute);
 // app.use('/api/reviews', reviewsRoute);

@@ -4,62 +4,42 @@ const Schema = mongoose.Schema;
 
 mongoose.plugin(slug);
 
-const UserSchema = mongoose.Schema({
-    first_name: {
+
+let UserSchema = new Schema({
+    f_name: {
         type: String,
+        required: true
     },
-    last_name: {
+    l_name: {
         type: String,
-    },
-    cedula: {
-        type: Number,
-    },
-    address: {
-        type: String,
-    },
-    address: {
-        type: String,
+        required: true
     },
     email: {
         type: String,
         required: true,
-        min: 6,
-        max: 255,
-        unique: true
+        unique:true
     },
-    username: {
-        type: String,
-        required: true,
-        min: 6,
-        max: 255,
-        unique: true
+    user_name:{
+        type:String,
+        required:true,
+        unique:true
     },
-    password: {
-        type: String,
-        required: true,
-        max: 1024,
-        min: 6
+    password:{
+        type:String,
+        required:true
     },
-    slug: { type: String, slug: ["first_name", "last_name", "username"] },
-    role: {
-        type: Schema.Types.ObjectId,
-        ref: 'Role',
+    birthday:{
+        type:Date,
+        required:true
+    },
+    favorites:[{
+        type:Schema.Types.ObjectId,
+        ref:'Drink'
+    }],
+    available: {
+        type: Boolean,
         required: true
-    },
-    bio: {
-        type: String,
-    },
-    avatar: {
-        type: String,
-        default: '/assets/icons/male_avatar.svg'
-    },
-    rating: Number,
-    speciality: [{ type: Schema.Types.ObjectId, ref: 'Speciality' }],
-    tests: [{ type: Schema.Types.ObjectId, ref: 'Test' }],
-    created_at: {
-        type: Date,
-        default: Date.now
-    },
+    }
 })
 
 module.exports = mongoose.model('User', UserSchema)
