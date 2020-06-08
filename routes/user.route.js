@@ -49,7 +49,8 @@ router.post('/register', async (req, res, next) =>{
     password: req.body.password,
     birthday: req.body.birthday,
     favorites: req.body.favorites,
-    available: req.body.available
+    available: req.body.available,
+    isAdmin: req.body.isAdmin
 
   });
 
@@ -96,7 +97,9 @@ router.post('/authenticate', (req, res, next) => {
             user_name: user.user_name,
             birthday: user.birthday,
             available: user.available,
-            favorites: user.favorites
+            favorites: user.favorites,
+            isAdmin: user.isAdmin
+
           }
          });
 

@@ -40,6 +40,10 @@ let UserSchema = new Schema({
     available: {
         type: Boolean,
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
     }
 })
 
