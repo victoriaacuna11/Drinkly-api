@@ -89,6 +89,7 @@ router.get('/', async (req, res) => {
 
 // });
 
+//REGISTER USER
 router.post('/register', async (req, res, next) =>{
 
   let newUser = new User({
@@ -113,6 +114,41 @@ router.post('/register', async (req, res, next) =>{
 });
 
 
+//AUTHENTICATE USER
+router.post('/authenticate', (req, res, next) => {
+  const username= req.body.user_name;
+  const password = req.body.password;
+
+  User.getUserByUsername(username, (err, user)=>{
+    if(err) throw err;
+    if(!user){
+      return res.json({success: false, msg: 'Los datos suministrados son incorrectos.'});
+    }
+
+    User.checkPassword(password, user.password, (err, isMatch)=>{
+      if(err) throw err;
+      if(isMatch){
+        const token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
+          expiresIn: 86400 //el usuario tiene que volver a loguearse luego de 1 dia
+        });
+
+        res.json({success: true, 
+          token: 'JWT '+token, 
+          user: {
+            id: user._id,
+            f_name: user.f_name,
+            l_name: user.l_name,
+            email: user.email
+            //El resto
+          }
+         });
+
+      } else{
+        return res.json({success: false, msg: 'Los datos suministrados son incorrectos.'});
+      }
+    });
+  });
+});
 
 
 module.exports = router;

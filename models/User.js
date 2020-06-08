@@ -64,3 +64,10 @@ module.exports.addUser = function(newUser, callback){
 
     });
 }
+
+module.exports.checkPassword = function(c_password, hash, callback){
+    bcrypt.compare(c_password, hash, (err, isMatch) => {
+        if(err) throw err;
+        callback(null, isMatch);
+    });
+}
