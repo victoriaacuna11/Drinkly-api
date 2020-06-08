@@ -8,6 +8,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const connectDB = require('./config/db');
+const passport = require('passport');
 
 dotenv.config({ path: './config/config.env' });
 
@@ -33,6 +34,13 @@ const userRoute = require('./routes/user.route');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+//Set Static Folder
+app.use(express.static(path.join(__dirname, 'user')));
 
 // Uploads image
 const storage = multer.diskStorage({
