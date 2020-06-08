@@ -94,5 +94,35 @@ router.post('/add', async (req, res) => {
 
 });
 
+// DELETE BAR
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    Bar.deleteOne({_id: req.params.id}, (err, bar) => {
+      if(err){
+          res.json(err);
+      }
+      else {
+          res.json(bar);
+      }
+  })
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
+  }
+
+});
+
 
 module.exports = router;

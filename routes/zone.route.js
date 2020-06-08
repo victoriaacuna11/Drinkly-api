@@ -3,7 +3,7 @@ const router = express.Router();
 const Zone = require('../models/Zone');
 
 
-//GET ZONE
+// GET ZONES
 
 router.get('/', async (req, res) => {
     try {
@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
   });
 
 
-  
+// POST A NEW ZONE  
 router.post('/add', async (req, res) => {
   try {
       // Destructuring de lo que manda el usuario
@@ -70,6 +70,65 @@ router.post('/add', async (req, res) => {
               error: 'Server Error ' + err
           });
       }
+  }
+
+});
+
+// UPDATE A ZONE
+router.put('/update/:id', async (req, res) => {
+  try {
+
+    const {
+      name,
+      available
+    } = req.body
+
+    const newZone = await Zone.findOneAndUpdate({ _id: req.params.id }, {
+      name,
+      available
+    }, { returnOriginal: false, useFindAndModify: false });
+
+    return res.status(200).json({
+      success: true,
+      data: newZone
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error ' + err
+    });
+  }
+});
+
+
+// DELETE A ZONE
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    
+    Zone.deleteOne({_id: req.params.id}, (err, zone) => {
+      if(err){
+          res.json(err);
+      }
+      else {
+          res.json(zone);
+      }
+  })
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
   }
 
 });

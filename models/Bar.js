@@ -9,6 +9,14 @@ let BarSchema = new Schema({
         type: String,
         required: true
     },
+    main_image: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
     working_hours: {
         type: String,
         required: true
@@ -52,8 +60,7 @@ let BarSchema = new Schema({
     },
     location:{
         direction:String,
-        //No se si hacerlo asi con un el id
-        zone:String
+        zone: { type: Schema.Types.ObjectId, ref: 'Zone', required: true },
         //required:true
     },
     //No se si se pone
