@@ -9,6 +9,14 @@ let BarSchema = new Schema({
         type: String,
         required: true
     },
+    main_image: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
     working_hours: {
         type: String,
         required: true
