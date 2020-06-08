@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
   });
 
   
-  // ADD  INGREDIENT
+// ADD  USER
 router.post('/add', async (req, res) => {
   try {
       // Destructuring de lo que manda el usuario
