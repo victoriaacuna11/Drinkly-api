@@ -52,8 +52,7 @@ let BarSchema = new Schema({
     },
     location:{
         direction:String,
-        //No se si hacerlo asi con un el id
-        zone:String
+        zone: { type: Schema.Types.ObjectId, ref: 'Zone', required: true },
         //required:true
     },
     //No se si se pone
