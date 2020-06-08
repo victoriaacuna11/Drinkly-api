@@ -74,8 +74,8 @@ router.get('/:id', async (req, res) => {
   // ADD  INGREDIENT
 router.post('/add', async (req, res) => {
   try {
-      // Destructuring de lo que manda el usuario
 
+      // Destructuring de lo que manda el usuario
       console.log(req.body.name);
       const url  = await cloudinary.v2.uploader.upload(req.file.path);
       console.log(url.secure_url);
@@ -113,34 +113,64 @@ router.post('/add', async (req, res) => {
 
 });
 
-// INHABILITATE/HABILITATE INGREDIENT
+// UPDATE INGREDIENT
 router.put('/update/:id', async (req, res) => {
   try {
-    console.log(req.body);
-    Ingredient.updateOne({_id: req.params.id}, (err, ingredient) => {
-      if(err){
-          res.json(err);
-      }
-      else {
-          res.json(ingredient);
-      }
-  })
+
+    const {
+      name,
+      category,
+      available,
+      photo,
+    } = req.body
+
+    const newIngredient = await Ingredient.findOneAndUpdate({ _id: req.params.id }, {
+      name,
+      category,
+      available,
+      photo,
+    }, { returnOriginal: false, useFindAndModify: false });
+
+    return res.status(200).json({
+      success: true,
+      data: newIngredient
+    });
 
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(val => val.message);
-
-      return res.status(400).json({
-        success: false,
-        error: messages
-      });
-    } else {
-      return res.status(500).json({
-        success: false,
-        error: 'Server Error ' + err
-      });
-    }
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error ' + err
+    });
   }
+});
+
+router.put('/update/photo/:id', async (req, res) => {
+  try {
+
+    const url  = await cloudinary.v2.uploader.upload(req.file.path);
+    let ingredient = {
+      name : req.body.name,
+      category : req.body.category,
+      available : req.body.available,
+      photo : url.secure_url
+    }
+
+    const newIngredient = await Ingredient.findOneAndUpdate({ _id: req.params.id }, ingredient, 
+      { returnOriginal: false, useFindAndModify: false });
+
+    return res.status(200).json({
+      success: true,
+      data: newIngredient
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error ' + err
+    });
+  }
+
+  
 
 });
 
