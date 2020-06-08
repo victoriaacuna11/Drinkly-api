@@ -34,62 +34,11 @@ router.get('/', async (req, res) => {
   
   });
 
-  
-//   // ADD  USER
-// router.post('/add', async (req, res) => {
-//   try {
-//       // Destructuring de lo que manda el usuario
-//       const {
-//         f_name,
-//         l_name,
-//         email,
-//         user_name,
-//         password,
-//         birthday,
-//         favorites,
-//         available
-//       } = req.body
 
-      
-//       const newUser = await User.create({
-//           f_name,
-//           l_name,
-//           email,
-//           user_name,
-//           password,
-//           birthday,
-//           favorites,
-//           available
-          
-//       });
-
-      
-//       // Send a new token to the client (frontend)
-//       return res.status(200).json({
-//           success: true,
-//           // token,
-//           user
-//       });
-
-//   } catch (err) {
-//       if (err.name === 'ValidationError') {
-//           const messages = Object.values(err.errors).map(val => val.message);
-
-//           return res.status(400).json({
-//               success: false,
-//               error: messages
-//           });
-//       } else {
-//           return res.status(500).json({
-//               success: false,
-//               error: 'Server Error ' + err
-//           });
-//       }
-//   }
-
-// });
 
 //REGISTER USER
+//Metodo para registrar un nuevo usuario, aqui recibe lo que venga del form, y en el método addUser encripta la contraseña
+//y salva el nuevo usuario, si todo sale bien.
 router.post('/register', async (req, res, next) =>{
 
   let newUser = new User({
@@ -115,6 +64,11 @@ router.post('/register', async (req, res, next) =>{
 
 
 //AUTHENTICATE USER
+//Ruta de autenticación. Busca en la BD si hay un usuario con el username del request. Si no lo hay da un error (son buenas prácticas
+// no especificar si el erro fue por la contraseña o por el nombre de usuario, porque eso le da información a los hackerosos).
+//Si existe el usuario, emplea un método para comparar la contraseña; si la contraseña es correcta entonces todo fino
+//y nos crea el token.
+
 router.post('/authenticate', (req, res, next) => {
   const username= req.body.user_name;
   const password = req.body.password;
@@ -122,7 +76,7 @@ router.post('/authenticate', (req, res, next) => {
   User.getUserByUsername(username, (err, user)=>{
     if(err) throw err;
     if(!user){
-      return res.json({success: false, msg: 'Los datos suministrados son incorrectos.'});
+      return res.json({success: false, msg: 'Los datos suministrados son incorrectos.'}); //fallo por nombre de usuario
     }
 
     User.checkPassword(password, user.password, (err, isMatch)=>{
@@ -138,17 +92,26 @@ router.post('/authenticate', (req, res, next) => {
             id: user._id,
             f_name: user.f_name,
             l_name: user.l_name,
-            email: user.email
-            //El resto
+            email: user.email,
+            user_name: user.user_name,
+            birthday: user.birthday,
+            available: user.available,
+            favorites: user.favorites
           }
          });
 
       } else{
-        return res.json({success: false, msg: 'Los datos suministrados son incorrectos.'});
+        return res.json({success: false, msg: 'Los datos suministrados son incorrectos.'});//fallo por contraseña incorrecta
       }
     });
   });
 });
 
+
+//USER PROFILE
+//Ruta protegida
+router.get('/profile', passport.authenticate('jwt', {session: false}), async (req, res, next)=>{
+  res.json({user: req.user});
+});
 
 module.exports = router;
