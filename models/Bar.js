@@ -10,7 +10,7 @@ let BarSchema = new Schema({
         required: true
     },
     main_image: {
-        type: String,
+        type: String, 
         required: true
     },
     description: {
@@ -22,11 +22,11 @@ let BarSchema = new Schema({
         required: true
     },
     rating: {
-        type: String,
+        type: Number,
         required: true
     },
     cost:{
-        type:String,
+        type: Number,
         required:true
     },
     phone:[{
@@ -34,8 +34,8 @@ let BarSchema = new Schema({
         required:true
     }],
     pictures:[{
-        type:String,
-        required:true
+        type: String, 
+        required: true
     }],
     menu:[{
         name:String,
@@ -59,7 +59,7 @@ let BarSchema = new Schema({
         required: true
     },
     location:{
-        direction:String,
+        address: String,
         zone: { type: Schema.Types.ObjectId, ref: 'Zone', required: true },
         //required:true
     },

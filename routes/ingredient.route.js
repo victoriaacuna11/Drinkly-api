@@ -76,16 +76,18 @@ router.post('/add', async (req, res) => {
   try {
 
       // Destructuring de lo que manda el usuario
-      console.log(req.body.name);
-      const url  = await cloudinary.v2.uploader.upload(req.file.path);
-      console.log(url.secure_url);
+      // console.log(req.body);
+      // const url  = await cloudinary.v2.uploader.upload(req.file.path);
+      // console.log(url.secure_url);
+
       let ingredient = {
         name : req.body.name,
         category : req.body.category,
         available : req.body.available,
-        photo : url.secure_url
+        photo : req.body.photo,
       }
-      console.log(ingredient.name);
+      
+      console.log(ingredient);
       const newIngredient = await Ingredient.create(ingredient);
       
       // Send a new token to the client (frontend)
@@ -117,6 +119,7 @@ router.post('/add', async (req, res) => {
 router.put('/update/:id', async (req, res) => {
   try {
 
+    console.log(req);
     const {
       name,
       category,
@@ -147,12 +150,12 @@ router.put('/update/:id', async (req, res) => {
 router.put('/update/photo/:id', async (req, res) => {
   try {
 
-    const url  = await cloudinary.v2.uploader.upload(req.file.path);
+    // const url  = await cloudinary.v2.uploader.upload(req.file.path);
     let ingredient = {
       name : req.body.name,
       category : req.body.category,
       available : req.body.available,
-      photo : url.secure_url
+      photo : req.body.photo,
     }
 
     const newIngredient = await Ingredient.findOneAndUpdate({ _id: req.params.id }, ingredient, 

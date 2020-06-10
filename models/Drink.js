@@ -27,10 +27,10 @@ let DrinkSchema = new Schema({
         category:String,
         //require:true
     },
-    pictures:[{
+    pictures:{
         type: String,
         required:true
-    }],
+    },
     available: {
         type: Boolean,
         required: true

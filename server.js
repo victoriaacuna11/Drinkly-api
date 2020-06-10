@@ -52,6 +52,8 @@ const storage = multer.diskStorage({
 });
 app.use(multer({ storage }).single('image'));
 
+app.use(multer({ storage }).array('photo'));
+
 // Shows every request (console)
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
