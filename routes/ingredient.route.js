@@ -79,12 +79,14 @@ router.post('/add', async (req, res) => {
       console.log(req.body.name);
       const url  = await cloudinary.v2.uploader.upload(req.file.path);
       console.log(url.secure_url);
+
       let ingredient = {
         name : req.body.name,
         category : req.body.category,
         available : req.body.available,
         photo : url.secure_url
       }
+      
       console.log(ingredient.name);
       const newIngredient = await Ingredient.create(ingredient);
       
