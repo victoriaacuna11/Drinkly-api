@@ -69,29 +69,21 @@ router.get('/', async (req, res) => {
   
         // Destructuring de lo que manda el usuario
         console.log(req.body.name);
-        const url  = await cloudinary.v2.uploader.upload(req.file.path);
-        console.log(url.secure_url);
-        
-
 
 
         let drink = {
           name : req.body.name,
           description : req.body.description,
           recipe : req.body.recipe,
-          ingredients : req.body.ingredients.split(','),
-          owner : {
-            name:req.body.owner_name,
-            category:req.body.owner_category
-          },
-          pictures : url.secure_url,
+          ingredients : req.body.ingredients,
+          owner : req.body.owner,
+          pictures : req.body.pictures,
           available : req.body.available,
           views : req.body.views 
         }
 
-        
+        console.log(drink);
 
-        console.log(drink.name);
         const newDrink = await Drink.create(drink);
         
         // Send a new token to the client (frontend)
