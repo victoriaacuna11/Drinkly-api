@@ -83,12 +83,14 @@ router.post('/authenticate', (req, res, next) => {
     User.checkPassword(password, user.password, (err, isMatch)=>{
       if(err) throw err;
       if(isMatch){
+        const expiresIn = 86400;
         const token = jwt.sign(user.toJSON(), process.env.TOKEN_SECRET, {
-          expiresIn: 86400 //el usuario tiene que volver a loguearse luego de 1 dia
+          expiresIn: expiresIn //el usuario tiene que volver a loguearse luego de 1 dia
         });
 
         res.json({success: true, 
           token: 'JWT '+token, 
+          expiresIn: expiresIn,
           user: {
             id: user._id,
             f_name: user.f_name,
@@ -100,7 +102,8 @@ router.post('/authenticate', (req, res, next) => {
             favorites: user.favorites,
             isAdmin: user.isAdmin
 
-          }
+          },
+          
          });
 
       } else{
