@@ -148,4 +148,10 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), async (re
   res.json({user: req.user});
 });
 
+router.get('/isAdmin', passport.authenticate('jwt', {session: false}), async (req, res, next)=>{
+  res.send(req.user.isAdmin);
+});
+
+
+
 module.exports = router;
