@@ -57,8 +57,15 @@ router.post('/register', async (req, res, next) =>{
   User.addUser(newUser, (err, newUser) => {
     if(err){
       res.json({success:false, msg: "No se pudo registrar usuario"})
-    }else {      
-      res.json({success:true, msg: "Se registró el usuario"})
+    }else {    
+      const expiresIn = 86400;
+      const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
+        expiresIn: expiresIn  //el usuario tiene que volver a loguearse luego de 1 dia
+      });  
+      res.json({success:true, 
+        token: 'JWT '+token, 
+        expiresIn: expiresIn, 
+        msg: "Se registró el usuario"});
     }
   });
 });
