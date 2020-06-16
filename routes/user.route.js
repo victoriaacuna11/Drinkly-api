@@ -57,7 +57,7 @@ router.post('/register', async (req, res, next) =>{
   User.addUser(newUser, (err, newUser) => {
     if(err){
       res.json({success:false, msg: "No se pudo registrar usuario"})
-    }else {
+    }else {      
       res.json({success:true, msg: "Se registró el usuario"})
     }
   });
