@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require('../models/User');
 
 
-//GET USER
+//GET USERS
 
 router.get('/', async (req, res) => {
     try {
@@ -120,43 +120,115 @@ router.post('/authenticate', (req, res, next) => {
   });
 });
 
-// DELETE USER
-router.delete('/delete/:id', async (req, res) => {
-  try {
+// // DELETE USER
+// router.delete('/delete/:id', async (req, res) => {
+//   try {
     
-    User.deleteOne({_id: req.params.id}, (err, item) => {
-      if(err){
-          res.json(err);
-      }
-      else {
-          res.json(item);
-      }
-  })
-} catch (err) {
-  if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map(val => val.message);
+//     User.deleteOne({_id: req.params.id}, (err, item) => {
+//       if(err){
+//           res.json(err);
+//       }
+//       else {
+//           res.json(item);
+//       }
+//   })
+// } catch (err) {
+//   if (err.name === 'ValidationError') {
+//     const messages = Object.values(err.errors).map(val => val.message);
 
-    return res.status(400).json({
-      success: false,
-      error: messages
-    });
-  } else {
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error ' + err
-    });
-  }
-}
-});
+//     return res.status(400).json({
+//       success: false,
+//       error: messages
+//     });
+//   } else {
+//     return res.status(500).json({
+//       success: false,
+//       error: 'Server Error ' + err
+//     });
+//   }
+// }
+// });
+
+
 
 //USER PROFILE
-//Ruta protegida
+//Rutas protegidas
 router.get('/profile', passport.authenticate('jwt', {session: false}), async (req, res, next)=>{
   res.json({user: req.user});
 });
 
 router.get('/isAdmin', passport.authenticate('jwt', {session: false}), async (req, res, next)=>{
   res.send(req.user.isAdmin);
+});
+
+//GET USER
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      data: user
+    });
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
+  }
+
+});
+
+// UPDATE INGREDIENT
+router.put('/update/:id', async (req, res) => {
+  try {
+
+    console.log(req);
+    const {
+      f_name,
+      l_name,
+      email,
+      user_name,
+      password,
+      birthday,
+      favorites,
+      available,
+      isAdmin
+    } = req.body
+
+    const newUser = await User.findOneAndUpdate({ _id: req.params.id }, {
+      f_name,
+      l_name,
+      email,
+      user_name,
+      password,
+      birthday,
+      favorites,
+      available,
+      isAdmin
+    }, { returnOriginal: false, useFindAndModify: false });
+
+    return res.status(200).json({
+      success: true,
+      data: newUser
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error ' + err
+    });
+  }
 });
 
 
