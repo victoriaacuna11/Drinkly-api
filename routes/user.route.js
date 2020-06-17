@@ -161,6 +161,10 @@ router.get('/isAdmin', passport.authenticate('jwt', {session: false}), async (re
   res.send(req.user.isAdmin);
 });
 
+router.get('/updateP', passport.authenticate('jwt', {session: false}), async (req, res, next)=>{
+  res.send(req.user.password);
+});
+
 //GET USER
 router.get('/:id', async (req, res) => {
   try {
@@ -189,7 +193,7 @@ router.get('/:id', async (req, res) => {
 
 });
 
-// UPDATE INGREDIENT
+// UPDATE USER
 router.put('/update/:id', async (req, res) => {
   try {
 
@@ -230,7 +234,5 @@ router.put('/update/:id', async (req, res) => {
     });
   }
 });
-
-
 
 module.exports = router;
