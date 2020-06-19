@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const Zone = require('../models/Zone');
+const Game = require('../models/Game');
 
-
-// GET ZONES
+// GET GAMES
 
 router.get('/', async (req, res) => {
     try {
-      const zones = await Zone.find();
+      const games = await Game.find();
   
       return res.status(200).json({
         success: true,
-        data: zones
+        data: games
       });
   
     } catch (err) {
@@ -33,19 +32,25 @@ router.get('/', async (req, res) => {
   });
 
 
-// POST A NEW ZONE  
+// POST A NEW GAME  
 router.post('/add', async (req, res) => {
   try {
       // Destructuring de lo que manda el usuario
       const {
           name,
-          available
+          available,
+          description,
+          photo,
+          rules
       } = req.body
 
       
-      const zone = await Zone.create({
+      const game = await Game.create({
         name,
-        available
+        available,
+        description,
+        photo,
+        rules
       });
 
       
@@ -53,7 +58,7 @@ router.post('/add', async (req, res) => {
       return res.status(200).json({
           success: true,
           // token,
-          zone
+          data: game
       });
 
   } catch (err) {
@@ -74,23 +79,58 @@ router.post('/add', async (req, res) => {
 
 });
 
-// UPDATE A ZONE
+//GET GAME
+
+router.get('/:id', async (req, res) => {
+    try {
+      const game = await Game.findById(req.params.id);
+  
+      return res.status(200).json({
+        success: true,
+        data: game
+      });
+  
+    } catch (err) {
+      if (err.name === 'ValidationError') {
+        const messages = Object.values(err.errors).map(val => val.message);
+  
+        return res.status(400).json({
+          success: false,
+          error: messages
+        });
+      } else {
+        return res.status(500).json({
+          success: false,
+          error: 'Server Error ' + err
+        });
+      }
+    }
+
+});
+
+// UPDATE A GAME
 router.put('/update/:id', async (req, res) => {
   try {
 
     const {
       name,
+      description,
+      rules,
+      photo,
       available
     } = req.body
 
-    const newZone = await Zone.findOneAndUpdate({ _id: req.params.id }, {
+    const newGame = await Game.findOneAndUpdate({ _id: req.params.id }, {
       name,
+      description,
+      rules,
+      photo,
       available
     }, { returnOriginal: false, useFindAndModify: false });
 
     return res.status(200).json({
       success: true,
-      data: newZone
+      data: newGame
     });
 
   } catch (err) {
@@ -102,16 +142,16 @@ router.put('/update/:id', async (req, res) => {
 });
 
 
-// DELETE A ZONE
+// DELETE A GAME
 router.delete('/delete/:id', async (req, res) => {
   try {
     
-    Zone.deleteOne({_id: req.params.id}, (err, zone) => {
+    Game.deleteOne({_id: req.params.id}, (err, item) => {
       if(err){
           res.json(err);
       }
       else {
-          res.json(zone);
+          res.json(item);
       }
   })
 
@@ -133,34 +173,6 @@ router.delete('/delete/:id', async (req, res) => {
 
 });
 
-//GET ZONE
-
-router.get('/:id', async (req, res) => {
-  try {
-    const zone = await Zone.findById(req.params.id);
-
-    return res.status(200).json({
-      success: true,
-      data: zone
-    });
-
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(val => val.message);
-
-      return res.status(400).json({
-        success: false,
-        error: messages
-      });
-    } else {
-      return res.status(500).json({
-        success: false,
-        error: 'Server Error ' + err
-      });
-    }
-  }
-
-});
 
 
 
