@@ -1,7 +1,7 @@
 {
-  "name": "ihappy",
+  "name": "drinkly",
   "version": "1.0.0",
-  "description": "",
+  "description": "A real cool app",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicolasleal570/iHappy.git"
+    "url": "git+https://github.com/victoriaacuna11/Drinkly-api.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nicolasleal570/iHappy/issues"
+    "url": "https://github.com/victoriaacuna11/Drinkly-api/issues"
   },
-  "homepage": "https://github.com/nicolasleal570/iHappy#readme",
+  "homepage": "https://github.com/victoriaacuna11/Drinkly-api#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
