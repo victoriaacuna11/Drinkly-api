@@ -8,6 +8,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const connectDB = require('./config/db');
+const passport = require('passport');
 
 dotenv.config({ path: './config/config.env' });
 
@@ -15,8 +16,15 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 //Import Routes
-
 const userpruebaRoute = require('./routes/userprueba');
+
+const adRoute = require('./routes/advertisement.route');
+const barRoute = require('./routes/bar.route');
+const drinkRoute = require('./routes/drink.route');
+const ingredientRoute = require('./routes/ingredient.route');
+const zoneRoute = require('./routes/zone.route');
+const userRoute = require('./routes/user.route');
+const gameRoute = require('./routes/game.route');
 
 
 // const reviewsRoute = require('./routes/reviews');
@@ -27,15 +35,25 @@ const userpruebaRoute = require('./routes/userprueba');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport); 
 
-// Uploads user avatars
-// const storage = multer.diskStorage({
-//   destination: path.join(__dirname, 'public/uploads'),
-//   filename: (req, file, cb) => {
-//     cb(null, new Date().getTime() + path.extname(file.originalname))
-//   }
-// });
-// app.use(multer({ storage }).single('image'));
+
+//Set Static Folder
+app.use(express.static(path.join(__dirname, 'user')));
+
+// Uploads image
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, 'public/uploads'),
+  filename: (req, file, cb) => {
+    cb(null, new Date().getTime() + path.extname(file.originalname))
+  }
+});
+app.use(multer({ storage }).single('image'));
+
+app.use(multer({ storage }).array('photo'));
 
 // Shows every request (console)
 if (process.env.NODE_ENV === 'development') {
@@ -44,6 +62,16 @@ if (process.env.NODE_ENV === 'development') {
 
 //Routes
 app.use('/api/usersprueba', userpruebaRoute);
+app.use('/api/adver', adRoute);
+app.use('/api/bar', barRoute);
+app.use('/api/drink', drinkRoute);
+app.use('/api/ingredient', ingredientRoute);
+app.use('/api/zone', zoneRoute);
+app.use('/api/user', userRoute);
+app.use('/api/game', gameRoute);
+
+
+
 // app.use('/api/auth', authRoute);
 // app.use('/api/users', userRoute);
 // app.use('/api/reviews', reviewsRoute);
