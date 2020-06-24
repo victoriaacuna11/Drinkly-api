@@ -32,6 +32,37 @@ router.get('/', async (req, res) => {
   
   });
 
+  // GET ZONE BY ID
+router.get('/:id', async (req, res) => {
+  try {
+    const item = await Zone.findById(req.params.id);
+    const zone = {
+      name: item.name,
+      available: item.available
+    }
+    return res.status(200).json({
+      success: true,
+      data: zone
+    });
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+
+      return res.status(400).json({
+        success: false,
+        error: messages
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
+  }
+
+});
+
 
 // POST A NEW ZONE  
 router.post('/add', async (req, res) => {
