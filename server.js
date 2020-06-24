@@ -24,6 +24,7 @@ const drinkRoute = require('./routes/drink.route');
 const ingredientRoute = require('./routes/ingredient.route');
 const zoneRoute = require('./routes/zone.route');
 const userRoute = require('./routes/user.route');
+const gameRoute = require('./routes/game.route');
 
 
 // const reviewsRoute = require('./routes/reviews');
@@ -67,6 +68,7 @@ app.use('/api/drink', drinkRoute);
 app.use('/api/ingredient', ingredientRoute);
 app.use('/api/zone', zoneRoute);
 app.use('/api/user', userRoute);
+app.use('/api/game', gameRoute);
 
 
 
