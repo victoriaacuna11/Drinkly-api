@@ -4,7 +4,7 @@ const Drink = require('../models/Drink');
 const cloudinary = require('cloudinary');
 
 
-//GET ADS
+//GET 
 
 router.get('/', async (req, res) => {
     try {
@@ -93,7 +93,7 @@ router.get('/:filter', async (req, res) => {
   
   });
   
-  // ADD  INGREDIENT
+  // ADD  
   router.post('/add', async (req, res) => {
     try {
   
@@ -214,7 +214,7 @@ router.put('/update/photo/:id', async (req, res) => {
 });
 
 
-// DELETE INGREDIENT
+// DELETE 
 router.delete('/delete/:id', async (req, res) => {
   try {
     
