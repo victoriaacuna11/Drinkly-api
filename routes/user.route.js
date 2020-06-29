@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const User = require('../models/User');
+const { check, validationResult } = require('express-validator');
 
 
 //GET USERS
@@ -39,35 +40,73 @@ router.get('/', async (req, res) => {
 //REGISTER USER
 //Metodo para registrar un nuevo usuario, aqui recibe lo que venga del form, y en el método addUser encripta la contraseña
 //y salva el nuevo usuario, si todo sale bien.
-router.post('/register', async (req, res, next) =>{
+router.post('/register', [check('email').custom((value, {req}) => {
+    return new Promise((resolve, reject) => {
+      User.findOne({email:req.body.email}, function(err, user){
+        if(err) {
+          reject(new Error('Server Error'))
+        }
+        if(Boolean(user)) {
+          reject(new Error('El email '+ req.body.email + ' ya lo usa otra cuenta.'))
+        }
+        resolve(true)
+      });
+    });
+  }), check('user_name').custom((value, {req}) => {
+    return new Promise((resolve, reject) => {
+      User.findOne({user_name:req.body.user_name}, function(err, user){
+        if(err) {
+          reject(new Error('Server Error'))
+        }
+        if(Boolean(user)) {
+          reject(new Error('El nombre de usuario ' + '\'' + req.body.user_name + '\''+  ' ya existe.'))
+        }
+        resolve(true)
+      });
+    });
+  }),],
+async (req, res, next) =>{
 
-  let newUser = new User({
-    f_name: req.body.f_name,
-    l_name: req.body.l_name,
-    email: req.body.email,
-    user_name: req.body.user_name,
-    password: req.body.password,
-    birthday: req.body.birthday,
-    favorites: req.body.favorites,
-    available: req.body.available,
-    isAdmin: req.body.isAdmin
+  const validationErrors = validationResult(req);
+  let errors = [];
+  if(!validationErrors.isEmpty()) {
+    Object.keys(validationErrors.mapped()).forEach(field => {
+      errors.push(validationErrors.mapped()[field]['msg']);
+    });
+  }
 
-  });
+  if(errors.length){
+    res.json({success:false, msg: errors})
+  }  else {
 
-  User.addUser(newUser, (err, newUser) => {
-    if(err){
-      res.json({success:false, msg: "No se pudo registrar usuario"})
-    }else {    
-      const expiresIn = 86400;
-      const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
-        expiresIn: expiresIn  //el usuario tiene que volver a loguearse luego de 1 dia
-      });  
-      res.json({success:true, 
-        token: 'JWT '+token, 
-        expiresIn: expiresIn, 
-        msg: "Se registró el usuario"});
-    }
-  });
+    let newUser = new User({
+      f_name: req.body.f_name,
+      l_name: req.body.l_name,
+      email: req.body.email,
+      user_name: req.body.user_name,
+      password: req.body.password,
+      birthday: req.body.birthday,
+      favorites: req.body.favorites,
+      available: req.body.available,
+      isAdmin: req.body.isAdmin
+
+    });
+
+    User.addUser(newUser, (err, newUser) => {
+      if(err){
+        res.json({success:false, msg: "No se pudo registrar usuarioaaa"})
+      }else {    
+        const expiresIn = 86400;
+        const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
+          expiresIn: expiresIn  //el usuario tiene que volver a loguearse luego de 1 dia
+        });  
+        res.json({success:true, 
+          token: 'JWT '+token, 
+          expiresIn: expiresIn, 
+          msg: "Se registró el usuario"});
+      }
+    });
+  }
 });
 
 
@@ -194,44 +233,88 @@ router.get('/:id', async (req, res) => {
 });
 
 // UPDATE USER
-router.put('/update/:id', async (req, res) => {
-  try {
-
-    console.log(req);
-    const {
-      f_name,
-      l_name,
-      email,
-      user_name,
-      password,
-      birthday,
-      favorites,
-      available,
-      isAdmin
-    } = req.body
-
-    const newUser = await User.findOneAndUpdate({ _id: req.params.id }, {
-      f_name,
-      l_name,
-      email,
-      user_name,
-      password,
-      birthday,
-      favorites,
-      available,
-      isAdmin
-    }, { returnOriginal: false, useFindAndModify: false });
-
-    return res.status(200).json({
-      success: true,
-      data: newUser
+router.put('/update/:id',  [check('email').custom((value, {req}) => {
+  return new Promise((resolve, reject) => {
+    User.findOne({email:req.body.email}, function(err, user){
+      if(err) {
+        reject(new Error('Server Error'))
+      }
+      if(Boolean(user)) {
+        if(user._id != req.params.id){
+          console.log('mejmej' + user)
+          reject(new Error('El email '+ req.body.email + ' ya lo usa otra cuenta.'))
+        }
+      }
+      resolve(true)
     });
-
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error ' + err
+  });
+}), check('user_name').custom((value, {req}) => {
+  return new Promise((resolve, reject) => {
+    User.findOne({user_name:req.body.user_name}, function(err, user){
+      if(err) {
+        reject(new Error('Server Error'))
+      }
+      if(Boolean(user)) {
+        if(user._id != req.params.id){
+          console.log('mejmej' + user)
+          reject(new Error('El nombre de usuario ' + '\'' + req.body.user_name + '\''+  ' ya existe.'))
+        }
+      }
+      resolve(true)
     });
+  });
+}),], async (req, res) => {
+
+  const validationErrors = validationResult(req);
+  let errors = [];
+  if(!validationErrors.isEmpty()) {
+    Object.keys(validationErrors.mapped()).forEach(field => {
+      errors.push(validationErrors.mapped()[field]['msg']);
+    });
+  }
+
+  if(errors.length){
+    res.json({success:false, msg: errors})
+  }  else{
+
+    try {
+
+      console.log(req);
+      const {
+        f_name,
+        l_name,
+        email,
+        user_name,
+        password,
+        birthday,
+        favorites,
+        available,
+        isAdmin
+      } = req.body
+
+      const newUser = await User.findOneAndUpdate({ _id: req.params.id }, {
+        f_name,
+        l_name,
+        email,
+        user_name,
+        password,
+        birthday,
+        favorites,
+        available,
+        isAdmin
+      }, { returnOriginal: false, useFindAndModify: false });
+
+      return res.status(200).json({
+        success: true,
+        data: newUser
+      });
+
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error ' + err
+      });
+    }
   }
 });
 
