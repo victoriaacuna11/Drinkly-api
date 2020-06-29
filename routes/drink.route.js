@@ -66,10 +66,11 @@ router.get('/:filter', async (req, res) => {
   //GET DRINK BY ID
 
 
-  router.get('/:id', async (req, res) => {
+  router.get('/get/:id', async (req, res) => {
+    console.log('hi');
     try {
       const drink = await Drink.findById(req.params.id);
-  
+      
       return res.status(200).json({
         success: true,
         data: drink

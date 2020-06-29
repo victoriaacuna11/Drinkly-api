@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const ingredient = await Ingredient.findById(req.params.id);
-
+    
     return res.status(200).json({
       success: true,
       data: ingredient
