@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
   });
 
   //FILTER
-router.get('/:filter', async (req, res) => {
+router.get('/filter_drink/:filter', async (req, res) => {
     try {
 
       let aux=req.params.filter.split(',')

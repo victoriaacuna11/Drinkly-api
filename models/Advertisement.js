@@ -9,6 +9,10 @@ let AdvertisementSchema = new Schema({
         type: String,
         required: true
     },
+    client: {
+        type: String,
+        required: true
+    },
     available: {
         type: Boolean,
         required: true
