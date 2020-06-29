@@ -59,7 +59,7 @@ router.post('/register', [check('email').custom((value, {req}) => {
           reject(new Error('Server Error'))
         }
         if(Boolean(user)) {
-          reject(new Error('El nombre de usuario ' + '\'' + req.body.user_name + '\''+  ' ya está tomado.'))
+          reject(new Error('El nombre de usuario ' + '\'' + req.body.user_name + '\''+  ' ya existe.'))
         }
         resolve(true)
       });
@@ -257,7 +257,7 @@ router.put('/update/:id',  [check('email').custom((value, {req}) => {
       if(Boolean(user)) {
         if(user._id != req.params.id){
           console.log('mejmej' + user)
-          reject(new Error('El nombre de usuario ' + '\'' + req.body.user_name + '\''+  ' ya está tomado.'))
+          reject(new Error('El nombre de usuario ' + '\'' + req.body.user_name + '\''+  ' ya existe.'))
         }
       }
       resolve(true)
