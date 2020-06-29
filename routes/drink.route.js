@@ -66,7 +66,7 @@ router.get('/filter_drink/:filter', async (req, res) => {
   //GET DRINK BY ID
 
 
-  router.get('/get/:id', async (req, res) => {
+  router.get('/:id', async (req, res) => {
     console.log('hi');
     try {
       const drink = await Drink.findById(req.params.id);
