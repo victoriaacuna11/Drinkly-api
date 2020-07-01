@@ -10,6 +10,43 @@ const path = require('path');
 const connectDB = require('./config/db');
 const passport = require('passport');
 
+// MAIL
+const exphbs = require('express-handlebars');
+// const nodemailer = require('nodemailer');
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars'); 
+// app.post('/sendemail', (req, res) => {
+//   try {
+//     const {
+//       user,
+//       email,
+//       recipe
+//   } = req.body
+//   console.log({
+//     user,
+//     email,
+//     recipe
+//   })
+//   } catch (err) {
+//     if (err.name === 'ValidationError') {
+//         const messages = Object.values(err.errors).map(val => val.message);
+
+//         return res.status(400).json({
+//             success: false,
+//             error: messages
+//         });
+//     } else {
+//         return res.status(500).json({
+//             success: false,
+//             error: 'Server Error ' + err
+//         });
+//     }
+// }
+
+// })
+
+
+
 dotenv.config({ path: './config/config.env' });
 
 // Connect DB
@@ -25,11 +62,9 @@ const ingredientRoute = require('./routes/ingredient.route');
 const zoneRoute = require('./routes/zone.route');
 const userRoute = require('./routes/user.route');
 const gameRoute = require('./routes/game.route');
+const mailRoute = require('./routes/mail.route');
 
 
-// const reviewsRoute = require('./routes/reviews');
-// const userRoute = require('./routes/user');
-// const authRoute = require('./routes/auth');
 
 //Middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -69,12 +104,9 @@ app.use('/api/ingredient', ingredientRoute);
 app.use('/api/zone', zoneRoute);
 app.use('/api/user', userRoute);
 app.use('/api/game', gameRoute);
+app.use('/api/sendmail', mailRoute);
 
 
-
-// app.use('/api/auth', authRoute);
-// app.use('/api/users', userRoute);
-// app.use('/api/reviews', reviewsRoute);
 
 // Port
 const PORT = process.env.PORT || 3000;
