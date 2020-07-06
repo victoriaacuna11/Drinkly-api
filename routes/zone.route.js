@@ -36,10 +36,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const item = await Zone.findById(req.params.id);
-    const zone = {
-      name: item.name,
-      available: item.available
-    }
+    const zone = item
     return res.status(200).json({
       success: true,
       data: zone
