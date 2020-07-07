@@ -19,22 +19,8 @@ router.post('/recipe', async (req, res) => {
     console.log({
       data
     })
-
-    // let outputAdmin = `
-    // <h3>¡Nueva receta publicada!</h3>
-    // </br>
-    // <b>${data.name}</b>
-    // <br></br>
-    // <br></br>
-    // <em>Descripción</em>
-    // <p>${data.description}</p>
-    // <em>Receta</em>
-    // <p>${data.recipe}</p>
-    // <em>Ingredientes</em>
-    // <p>${data.ingredients}</p>
-    // <b>Escrita por ${data.owner_name} (@${data.username})</b>
-    // <p>${data.message}</p>
-    // `
+    console.log('receta');
+    console.log(data.recipe);
 
     let outputAdmin = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -197,7 +183,7 @@ router.post('/recipe', async (req, res) => {
         <td style="padding:18px 0px 18px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-family: inherit"><strong>${data.name}</strong></span></div>
 <div style="font-family: inherit; text-align: center"><span style="font-family: inherit"><em>Publicado por ${data.owner_name} (@${data.username})</em></span></div>
 <div style="font-family: inherit; text-align: center"><span style="font-family: inherit">${data.description}</span></div>
-<div style="font-family: inherit; text-align: center"><span style="font-family: inherit"><em>${data.recipe}</em></span></div>
+<div style="font-family: inherit; text-align: center"><span style="white-space: pre-line; white-space: pre-wrap; font-family: inherit"><em>${data.recipe}</em></span></div>
 <div style="font-family: inherit; text-align: center"><span style="font-family: inherit">${data.ingredients}</span></div>
 <div style="font-family: inherit; text-align: center"><br></div>
 <div style="font-family: inherit; text-align: center"><span style="font-family: inherit">${data.message}</span></div><div></div></div></td>
@@ -320,22 +306,6 @@ router.post('/user', async (req, res) => {
       data
     })
 
-    
-
-    // let outputClient = `
-    // <h3>¡${data.owner_name}, gracias por ser parte de Drinkly!</h3>
-    // </br>
-    // </br>
-    // <p>Tu receta ha sido enviada al correo de los administradores. Ellos se encargarán de revisarla y publicarla.</p>
-    // <p>En caso de que hayas elegido publicarla como anónimo no se revelarán tus datos, en caso contrario te daremos créditos.</p>
-    // </br></br>
-    // <em>Esta es la receta que publicaste...</em></br>
-    // <p>${data.name}</p></br>
-    // <p>${data.description}</p>
-    // <p>${data.recipe}</p>
-    // <em>Ingredientes</em>
-    // <p>${data.ingredients}</p>
-    // `
 
     let outputClient = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -499,7 +469,7 @@ router.post('/user', async (req, res) => {
       <tr>
         <td style="padding:18px 0px 18px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-family: inherit"><strong>${data.name}</strong></span></div>
 <div style="font-family: inherit; text-align: center"><span style="font-family: inherit">${data.description}</span></div>
-<div style="font-family: inherit; text-align: center"><span style="font-family: inherit"><em>${data.recipe}</em></span></div>
+<div style="font-family: inherit; text-align: center"><span style="white-space: pre-line; white-space: pre-wrap; font-family: inherit"><em>${data.recipe}</em></span></div>
 <div style="font-family: inherit; text-align: center"><span style="font-family: inherit">${data.ingredients}</span></div><div></div></div></td>
       </tr>
     </tbody>
